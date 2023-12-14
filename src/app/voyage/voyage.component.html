@@ -1,0 +1,102 @@
+<div class="container mx-auto my-8 flex flex-col items-center">
+    <div class="w-full mb-4 flex flex-row justify-between">
+        <div>
+            <label for="dateFilter" class="block text-sm font-medium text-gray-700">Filter by Date:</label>
+            <input type="date" id="dateFilter" (change)="filterByDate($event)" class="mt-1 p-2 border rounded-md">
+        </div>
+        <div>
+            <label for="priceRange" class="block text-sm font-medium text-gray-700">Price Range:</label>
+            <div class="flex items-center mt-2">
+            <input
+                type="range"
+                id="priceRange"
+                name="priceRange"
+                (change)="rangePrice($event)"
+                min="500"
+                [max]="maxPrice"
+            />
+            <span class="ml-2">{{range}} DH</span>
+            </div>
+        </div>
+        <div>
+            <label for="destinationFilter" class="block text-sm font-medium text-gray-700">Filter by Destination:</label>
+            <select id="destinationFilter" (change)="filterByDestination($event)" class="mt-1 p-2 border rounded-md">
+              <option value="" selected>All Destinations</option>
+              @for (city of cities; track $index) {
+                <option [value]="city">{{city}}</option>
+              }
+            </select>
+          </div>
+    </div>
+    
+    <div class="w-full flex flex-wrap justify-center">
+      @for (item of filtered; track $index) {
+        <div class="max-w-sm rounded-md overflow-hidden shadow-lg mx-2 my-4 bg-white border border-solid border-gray-300">
+            <div class="relative w-full">
+                <div class="flex">
+                  @for (item3 of item.images; track $index) {
+                    <div class="w-full" class="flex">
+                      <img [src]="item3" class="block w-full" alt="Wild Landscape" />
+                    </div>
+                  }
+                </div>
+              </div>
+          <div class="px-4 py-2">
+            <div class="font-bold text-xl mb-2">{{item.nom}}</div>
+            <div class="flex flex-col mb-2">
+              <div>
+                <span class="font-bold text-l">Destination : </span>{{item.destination}}
+              </div>
+              <div>
+                <span class="font-bold text-l">Date : </span>{{item.date.toDateString()}}
+              </div>
+              <div>
+                <span class="font-bold text-l">Nombre de place disponible : </span>{{item.nbrPlaces}}
+              </div>
+              <div>
+                <span class="font-bold text-l">Prix : </span>{{item.prixInitial}} DH
+              </div>
+            </div>
+          </div>
+          <div class="px-4 pb-2">
+            @for (item1 of item.villes; track $index) {
+              <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{item1}}</span>
+            }
+          </div>
+          <div class="px-4 pb-2 flex flex-col justify-center items-center">
+            <button mat-button (click)="openReservationDialog(item)" class="bg-purple-900 text-white px-6 py-2">Réservez</button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300">
+      <thead>
+        <tr>
+          <th class="py-2 px-4 border-b">Voyage</th>
+          <th class="py-2 px-4 border-b">Full Name</th>
+          <th class="py-2 px-4 border-b">Phone Number</th>
+          <th class="py-2 px-4 border-b">CIN</th>
+          <th class="py-2 px-4 border-b">Number of Places</th>
+          <th class="py-2 px-4 border-b">Meals</th>
+          <th class="py-2 px-4 border-b">Prix</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (res of reservations.getValue(); track $index) {
+            <tr>
+            <td class="py-2 px-4 border-b">{{res.voyagename}}</td>
+            <td class="py-2 px-4 border-b">{{res.fullName}}</td>
+            <td class="py-2 px-4 border-b">{{res.phoneNumber}}</td>
+            <td class="py-2 px-4 border-b">{{res.cin}}</td>
+            <td class="py-2 px-4 border-b">{{res.numberOfSeats}}</td>
+            <td class="py-2 px-4 border-b">{{res.meal}}</td>
+            <td class="py-2 px-4 border-b">{{res.prix}} DH</td>
+            </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  
